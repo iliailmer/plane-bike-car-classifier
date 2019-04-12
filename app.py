@@ -2,7 +2,10 @@ import os
 from flask import Flask, flash, request, redirect, render_template, jsonify
 from werkzeug.utils import secure_filename
 from werkzeug import SharedDataMiddleware
-from fastai.vision import open_image, load_learner, Path
+from fastai.vision import *
+from fastai import *
+
+defaults.device = torch.device('cpu')
 
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
