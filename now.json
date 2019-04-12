@@ -1,5 +1,14 @@
 {
-  "features": {
-    "cloud": "v1"
-  }
+  "version": 2,
+  "name": "python-flask",
+  "builds": [
+    {
+      "src": "**/*.py",
+      "use": "@now/python@canary"
+    },
+    {
+      "src": "css/**",
+      "use": "@now/static"
+    }
+  ]
 }
