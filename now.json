@@ -4,7 +4,8 @@
   "builds": [
     {
       "src": "**/*.py",
-      "use": "@now/python@canary"
+      "use": "@now/python@canary",
+      "config": { "maxLambdaSize": "90mb" }
     },
     {
       "src": "css/**",
