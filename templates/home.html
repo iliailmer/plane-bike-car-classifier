@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FastAI 3-Class Classification Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+<div class="home">
+    <h1>FastAI 3-Class Classification Project</h1>
+    <h2>A plane, a car or a bike?</h2>
+    This is a template for my classification project.
+    <p>You can either upload you own image</p>
+    <form method=post enctype=multipart/form-data>
+      <input type=file name=file>
+      <input type=submit value=Upload>
+    </form>
+    <!--<button onclick="">Upload image</button>-->
+    <p>Or enter a URL </p>
+    <label>
+        <textarea></textarea>
+    </label>
+</div>
+</body>
+<footer>
+    Made by <a href="https://iliailmer.github.io">Ilia Ilmer</a>
+</footer>
+</html>
