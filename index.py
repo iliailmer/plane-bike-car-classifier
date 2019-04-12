@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 from werkzeug import SharedDataMiddleware
 from fastai.vision import open_image, load_learner, Path
 
-UPLOAD_FOLDER = 'fastai_project/uploads'
+UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
@@ -39,12 +39,13 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            path = Path('./fastai_project/uploads')
+            path = Path('./uploads')
             _data = open_image(path / file.filename)
-            _learner = load_learner(Path('./fastai_project/model/'))
+            _learner = load_learner(Path('./model/'))
             _, _, outputs = _learner.predict(_data)
             _learner.data.classes = ['bicycle', 'car', 'plane']
             os.remove(path / file.filename)
+
             return jsonify({
                 "predictions": sorted(
                     zip(_learner.data.classes, map(float, outputs)),
@@ -53,7 +54,7 @@ def upload_file():
                 )}
             )  # shamelessly stolen the output from https://github.com/simonw/cougar-or-not
 
-    return render_template("home.html")
+    return render_template("index.html")
 
 
 if __name__ == '__main__':
