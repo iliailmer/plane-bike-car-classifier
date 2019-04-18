@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from werkzeug import SharedDataMiddleware
 from fastai.vision import *
 from fastai import *
+from fastai.callbacks.hooks import *
 
 defaults.device = torch.device('cpu')
 
@@ -45,20 +46,26 @@ def upload_file():
             path = Path('./uploads')
             _data = open_image(path / file.filename)
             _learner = load_learner(Path('./model/'))
-            _, _, outputs = _learner.predict(_data)
-            _learner.data.classes = ['bicycle', 'car', 'plane']
-            os.remove(path / file.filename)
+            _learner.data.classes = ['bike', 'car', 'plane']
+            cls, _, outputs = _learner.predict(_data)
+            pred_list = sorted(
+                zip(_learner.data.classes, map(float, outputs)),
+                key=lambda p: p[1],
+                reverse=True
+            )
+            result_dict = {a:'{:.8f}%'.format(b*100) for a,b in pred_list}#{
+                #"Predictions":}
 
-            return jsonify({
-                "predictions": sorted(
-                    zip(_learner.data.classes, map(float, outputs)),
-                    key=lambda p: p[1],
-                    reverse=True
-                )}
-            )  # shamelessly stolen the output from https://github.com/simonw/cougar-or-not
+            return render_template("output.html", filename=filename,
+                                   output=result_dict)
+            # jsonify(result_dict)  # shamelessly stolen the output from https://github.com/simonw/cougar-or-not
 
     return render_template("index.html")
 
 
 if __name__ == '__main__':
+    # check if uploads is non-empty and delete everything
+    files = os.listdir(Path('./uploads'))
+    for each in files:
+        os.remove(Path('./uploads') / each)
     app.run(debug=True)

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FastAI 3-Class Classification Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+<div class="home">
+    <h1>FastAI 3-Class Classification Project</h1>
+    <h2>You uploaded</h2>
+    {% if filename %}
+        <table>
+            <tr>
+                <th> Class</th>
+                <th> With Probability</th>
+            </tr>
+            {% for key, value in output.items() %}
+                <tr>
+                    <td> {{ key }}</td>
+                    <td> {{ value }} </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <h3><img src="{{ url_for('uploaded_file', filename=filename) }}" alt="image"></h3>
+    {% else %}
+        <h3>Error uploading.</h3>
+    {% endif %}
+    <p><a href="./">Go Back</a></p>
+</div>
+</body>
+<footer>
+    Made by <a href="https://iliailmer.github.io">Ilia Ilmer</a>
+</footer>
+</html>
