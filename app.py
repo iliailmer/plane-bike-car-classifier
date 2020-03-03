@@ -1,7 +1,7 @@
 import os
 from flask import Flask, flash, request, redirect, render_template, jsonify
 from werkzeug.utils import secure_filename
-from werkzeug import SharedDataMiddleware
+from werkzeug.middleware.shared_data import SharedDataMiddleware
 from fastai.vision import *
 from fastai import *
 from fastai.callbacks.hooks import *
