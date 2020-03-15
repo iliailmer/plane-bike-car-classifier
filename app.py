@@ -1,12 +1,8 @@
 import os
 from flask import Flask, flash, request, redirect, render_template
 from werkzeug.utils import secure_filename
-<<<<<<< HEAD
-from werkzeug.middleware.shared_data import SharedDataMiddleware
-=======
 # from werkzeug import SharedDataMiddleware
 import torch
->>>>>>> f5f5020bb6adcba36375f0bc6492762a65a57412
 from fastai.vision import *
 from fastai.basics import *
 from fastai.callbacks.hooks import *
