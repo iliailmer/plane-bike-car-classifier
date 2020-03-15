@@ -1,12 +1,14 @@
 import os
-from flask import Flask, flash, request, redirect, render_template, jsonify
+from flask import Flask, flash, request, redirect, render_template
 from werkzeug.utils import secure_filename
 from werkzeug import SharedDataMiddleware
+import torch
+from skimage.io import imread
 from fastai.vision import *
 from fastai import *
 from fastai.callbacks.hooks import *
 
-defaults.device = torch.device('cpu')
+device = torch.device('cpu')
 
 UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
@@ -43,8 +45,8 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            path = Path('./uploads')
-            _data = open_image(path / file.filename)
+            path = './uploads'
+            _data = open_image(f'{path}/{file.filename}')
             _learner = load_learner(Path('./model/'))
             _learner.data.classes = ['bike', 'car', 'plane']
             cls, _, outputs = _learner.predict(_data)
@@ -53,8 +55,9 @@ def upload_file():
                 key=lambda p: p[1],
                 reverse=True
             )
-            result_dict = {a:'{:.8f}%'.format(b*100) for a,b in pred_list}#{
-                #"Predictions":}
+            result_dict = {a: '{:.8f}%'.format(b*100)
+                           for a, b in pred_list}  # {
+            # "Predictions":}
 
             return render_template("output.html", filename=filename,
                                    output=result_dict)
