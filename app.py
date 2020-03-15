@@ -1,7 +1,7 @@
 import os
 from flask import Flask, flash, request, redirect, render_template
 from werkzeug.utils import secure_filename
-from werkzeug import SharedDataMiddleware
+# from werkzeug import SharedDataMiddleware
 import torch
 from fastai.vision import open_image, load_learner
 from fastai.basics import Path
@@ -13,14 +13,16 @@ UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), './uploads/..')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 app.add_url_rule('/uploads/<filename>', 'uploaded_file',
                  build_only=True)
-app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
-    '/uploads': app.config['UPLOAD_FOLDER']
-})
+
+# app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
+#     '/uploads': app.config['UPLOAD_FOLDER']
+# })
 
 
 def allowed_file(filename):
@@ -44,7 +46,7 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            path = './uploads'
+            path = app.config['UPLOAD_FOLDER']
             _data = open_image(f'{path}/{file.filename}')
             _learner = load_learner(Path('./model/'))
             _learner.data.classes = ['bike', 'car', 'plane']
