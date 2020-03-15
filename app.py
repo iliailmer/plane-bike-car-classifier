@@ -1,25 +1,32 @@
 import os
-from flask import Flask, flash, request, redirect, render_template, jsonify
+from flask import Flask, flash, request, redirect, render_template
 from werkzeug.utils import secure_filename
+<<<<<<< HEAD
 from werkzeug.middleware.shared_data import SharedDataMiddleware
+=======
+# from werkzeug import SharedDataMiddleware
+import torch
+>>>>>>> f5f5020bb6adcba36375f0bc6492762a65a57412
 from fastai.vision import *
-from fastai import *
+from fastai.basics import *
 from fastai.callbacks.hooks import *
 
-defaults.device = torch.device('cpu')
+device = torch.device('cpu')
 
-UPLOAD_FOLDER = './uploads'
+# UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), './uploads/')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 app.add_url_rule('/uploads/<filename>', 'uploaded_file',
                  build_only=True)
-app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
-    '/uploads': app.config['UPLOAD_FOLDER']
-})
+
+# app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
+#     '/uploads': app.config['UPLOAD_FOLDER']
+# })
 
 
 def allowed_file(filename):
@@ -43,8 +50,8 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            path = Path('./uploads')
-            _data = open_image(path / file.filename)
+            path = app.config['UPLOAD_FOLDER']
+            _data = open_image(f'{path}/{file.filename}')
             _learner = load_learner(Path('./model/'))
             _learner.data.classes = ['bike', 'car', 'plane']
             cls, _, outputs = _learner.predict(_data)
@@ -53,12 +60,11 @@ def upload_file():
                 key=lambda p: p[1],
                 reverse=True
             )
-            result_dict = {a:'{:.8f}%'.format(b*100) for a,b in pred_list}#{
-                #"Predictions":}
+            result_dict = {a: f'{b*100:.8f}%'
+                           for a, b in pred_list}
 
             return render_template("output.html", filename=filename,
                                    output=result_dict)
-            # jsonify(result_dict)  # shamelessly stolen the output from https://github.com/simonw/cougar-or-not
 
     return render_template("index.html")
 
