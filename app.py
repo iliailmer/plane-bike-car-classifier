@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 from werkzeug import SharedDataMiddleware
 import torch
 from fastai.vision import open_image, load_learner
-from fastai import Path
+from fastai.basics import Path
 # from fastai.callbacks.hooks import *
 
 device = torch.device('cpu')
