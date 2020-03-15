@@ -3,9 +3,9 @@ from flask import Flask, flash, request, redirect, render_template
 from werkzeug.utils import secure_filename
 # from werkzeug import SharedDataMiddleware
 import torch
-from fastai.vision import open_image, load_learner
-from fastai.basics import Path
-# from fastai.callbacks.hooks import *
+from fastai.vision import *
+from fastai.basics import *
+from fastai.callbacks.hooks import *
 
 device = torch.device('cpu')
 
