@@ -9,7 +9,7 @@ from fastai.callbacks.hooks import *
 
 device = torch.device('cpu')
 
-UPLOAD_FOLDER = './uploads'
+# UPLOAD_FOLDER = './uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
