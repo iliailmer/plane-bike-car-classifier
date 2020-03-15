@@ -3,10 +3,9 @@ from flask import Flask, flash, request, redirect, render_template
 from werkzeug.utils import secure_filename
 from werkzeug import SharedDataMiddleware
 import torch
-from skimage.io import imread
-from fastai.vision import *
-from fastai import *
-from fastai.callbacks.hooks import *
+from fastai.vision import open_image, load_learner
+from fastai import Path
+# from fastai.callbacks.hooks import *
 
 device = torch.device('cpu')
 
@@ -55,13 +54,11 @@ def upload_file():
                 key=lambda p: p[1],
                 reverse=True
             )
-            result_dict = {a: '{:.8f}%'.format(b*100)
-                           for a, b in pred_list}  # {
-            # "Predictions":}
+            result_dict = {a: f'{b*100:.8f}%'
+                           for a, b in pred_list}
 
             return render_template("output.html", filename=filename,
                                    output=result_dict)
-            # jsonify(result_dict)  # shamelessly stolen the output from https://github.com/simonw/cougar-or-not
 
     return render_template("index.html")
 
