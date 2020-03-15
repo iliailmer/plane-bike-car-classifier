@@ -14,7 +14,7 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), './uploads/..')
+    os.path.dirname(os.path.realpath(__file__)), './uploads/')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 app.add_url_rule('/uploads/<filename>', 'uploaded_file',
